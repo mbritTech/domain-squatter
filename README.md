@@ -44,13 +44,10 @@ domain-squatter/
     ├── domains.txt         # dominios a analizar (el "feed")
     ├── keywords.txt        # marcas que usa la fase 1
     ├── legitimate.txt      # dominios legítimos que usa la fase 2
-    └── year.csv            # lista de phishing de TweetFeed (descargada)
+    └── year.csv            # lista de phishing de TweetFeed (descarga necesaria)
 ```
 
-`data/domains.txt` incluye 91 dominios de ejemplo que cubren varias técnicas:
-dueños legítimos, marcas con una palabra señuelo, erratas de un carácter,
-homóglifos, parecidos fuera del presupuesto, dominios reales del volcado de
-phishing y ruido que no debe coincidir con nada.
+`data/domains.txt` incluye 120 dominios de ejemplo que cubren varias técnicas de cybersquatting.
 
 
 ## Las tres fases
@@ -70,11 +67,11 @@ coincidencia (`exact`, `contains` o `token-all`). Al terminar, y por la salida d
 error, aparece el resumen:
 
 ```text
-61 of 91 domains flagged
+80 of 120 domains flagged
 ```
 
-Es decir: 61 de los 91 dominios han coincidido con alguna marca, con 63 filas en
-la tabla porque un mismo dominio puede coincidir con varias. Los 30 restantes
+Es decir: 80 de los 120 dominios han coincidido con alguna marca, con 82 filas en
+la tabla porque un mismo dominio puede coincidir con varias. Los 40 restantes
 son las erratas de un carácter y el ruido; ahí es donde entra la fase 2.
 
 | Opción | Por defecto | Para qué sirve |
@@ -100,10 +97,10 @@ Salida: una tabla con el dominio, el dominio legítimo al que se parece y la
 distancia. Resumen final:
 
 ```text
-34 of 91 domains matched (25 exact/fuzzy, 9 near miss)
+58 of 120 domains matched (35 exact/fuzzy, 23 near miss)
 ```
 
-Son 25 coincidencias exactas o difusas, y 9 parecidos que se han marcado por
+Son 35 coincidencias exactas o difusas, y 23 parecidos que se han marcado por
 caer dentro de `--watch-distance`.
 
 | Opción | Por defecto | Para qué sirve |
@@ -150,10 +147,19 @@ completo (unas 98.000 líneas) salen 14.813 dominios únicos.
 Resumen esperado con los datos de ejemplo:
 
 ```text
-4 of 91 crafted domains matched against 14813 phishing domains
+4 of 120 crafted domains matched against 14813 phishing domains
 ```
 
-En este caso las coincidencias no son un cero, porque `data/domains.txt` incluye
+Cada fila de la tabla incluye también el dominio del volcado que ha coincidido:
+
+```text
+| movistarz.shop            | phishing | movistarz.shop            |
+| santander-seguridad.com   | phishing | santander-seguridad.com   |
+| transaccionesmovistar.com | phishing | transaccionesmovistar.com |
+| renfe.my.id               | phishing | renfe.my.id               |
+```
+
+En este caso las coincidencias son cuatro, porque `data/domains.txt` incluye
 cuatro dominios que el volcado real tiene registrados: `renfe.my.id`,
 `movistarz.shop`, `santander-seguridad.com` y `transaccionesmovistar.com`. Los
 tres primeros también los detectan las fases 1 y 2 (`movistarz.shop`, por
@@ -167,7 +173,7 @@ si el dominio ya se ha usado.
 | `--type` | `domain` | valor de la columna *type* que se conserva |
 | `--tag` | `phishing` | etiqueta que se conserva (sin la `#`) |
 | `--show-unmatched` | desactivado | añade al final los dominios que no están en la lista |
-| `--csv RUTA` | — | exporta el veredicto de cada dominio a un CSV |
+| `--csv RUTA` | — | exporta el veredicto y el dominio de phishing coincidente a un CSV |
 
 Con `--tag scam`, por ejemplo, se comparan las filas etiquetadas como estafa en
 lugar de phishing:
@@ -186,7 +192,7 @@ cuando el dominio se ha marcado y `N` cuando no.
 |---|---|
 | 1 | `analyzed-domain, match, keyword, match-type` |
 | 2 | `analyzed-domain, match, legitimate, distance, match-type` |
-| 3 | `analyzed-domain, match` |
+| 3 | `analyzed-domain, match, phishing-domain` |
 
 ## Ejemplo completo
 
@@ -210,9 +216,9 @@ Resultado de referencia con los ficheros incluidos en el repositorio:
 
 | Fase | Salida |
 |---|---|
-| 1 | `61 of 91 domains flagged` |
-| 2 | `34 of 91 domains matched (25 exact/fuzzy, 9 near miss)` |
-| 3 | `4 of 91 crafted domains matched against 14813 phishing domains` |
+| 1 | `80 of 120 domains flagged` |
+| 2 | `58 of 120 domains matched (35 exact/fuzzy, 23 near miss)` |
+| 3 | `4 of 120 crafted domains matched against 14813 phishing domains` |
 
 Si tus números coinciden, el entorno está bien montado. El volcado de phishing
 cambia a diario, así que la cifra de la fase 3 puede variar; las de las fases 1

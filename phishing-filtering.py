@@ -119,8 +119,12 @@ def load_phishing(path, wanted_type, wanted_tag):
 
 
 def compare(crafted, phishing):
-    """Split the crafted list into the domains seen in the feed and the rest."""
-    found = [domain for domain in crafted if domain in phishing]
+    """Map crafted domains to the feed domain they matched, and return the rest.
+
+    The feed is a set of normalized domains, so the matching entry is the
+    crafted domain itself; keeping it as a value makes the output explicit.
+    """
+    found = {domain: domain for domain in crafted if domain in phishing}
     missing = [domain for domain in crafted if domain not in phishing]
     return found, missing
 
@@ -133,22 +137,38 @@ def render(domains, verb):
     return "\n".join(f"| {domain.ljust(width)} | {verb} |" for domain in domains)
 
 
+def render_matches(found, verb):
+    """Aligned rows: | domain | verb | phishing domain that matched |."""
+    rows = [(domain, verb, matched) for domain, matched in found.items()]
+    if not rows:
+        return ""
+    widths = [max(len(row[index]) for row in rows) for index in range(3)]
+    return "\n".join(
+        "| " + " | ".join(cell.ljust(width) for cell, width in zip(row, widths)) + " |"
+        for row in rows
+    )
+
+
 def same_file(path, other):
     """True when both arguments resolve to the same file, symlinks included."""
     return os.path.realpath(path) == os.path.realpath(other)
 
 
+CSV_HEADER = ("analyzed-domain", "match", "phishing-domain")
+
+
 def write_csv(path, crafted, found):
-    """Export the verdict for every crafted domain to a file only its owner can read."""
+    """Export the verdict and matched feed domain to a file only its owner can read."""
     descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 0o600)
     os.fchmod(descriptor, 0o600)
     with os.fdopen(descriptor, "w", encoding="utf-8", newline="") as handle:
         # RFC 4180 defaults to CRLF, which leaves a stray \r on the last field for
         # cut/awk. Plain \n still parses in Excel, pandas and the csv module.
         writer = csv.writer(handle, lineterminator="\n")
-        writer.writerow(("analyzed-domain", "match"))
+        writer.writerow(CSV_HEADER)
         writer.writerows(
-            (domain, "Y" if domain in found else "N") for domain in crafted
+            (domain, "Y" if domain in found else "N", found.get(domain, ""))
+            for domain in crafted
         )
 
 
@@ -186,7 +206,7 @@ def main():
             sys.exit(f"error: cannot write {args.csv}: {error}")
 
     if found:
-        print(render(found, "phishing"))
+        print(render_matches(found, "phishing"))
     else:
         print(f"none of the {len(crafted)} crafted domains appear among the "
               f"{len(phishing)} phishing domains")

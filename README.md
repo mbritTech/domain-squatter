@@ -131,7 +131,7 @@ Hay dos detalles que conviene conocer:
 Tipos de coincidencia: `identical` (distancia 0), `fuzzy` (dentro del
 presupuesto) y `near-miss` (dentro de `--watch-distance`).
 
-#### **DEMO** -> [Filtrado por Distancia de Levenshtein](/domain-squatter/demo/fase-2-levenshtein.mov)
+#### **DEMO** -> [Filtrado por Distancia de Levenshtein](/demo/fase-2-levenshtein.mov)
 
 
 ### Fase 3 — Comparación con una lista real de phishing
@@ -187,7 +187,7 @@ lugar de phishing:
 python3 phishing-filtering.py --domains data/domains.txt --phishing data/year.csv --tag scam
 ```
 
-#### **DEMO** -> [Filtrado por Lista de Phishing](/domain-squatter/demo/fase-3-phishing.mov)
+#### **DEMO** -> [Filtrado por Lista de Phishing](/demo/fase-3-phishing.mov)
 
 
 ## Cómo leer el CSV

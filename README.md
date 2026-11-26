@@ -82,6 +82,15 @@ son las erratas de un carácter y el ruido; ahí es donde entra la fase 2.
 | `--show-unmatched` | desactivado | añade al final los dominios que no coincidieron con nada |
 | `--csv RUTA` | — | exporta el análisis completo a un CSV |
 
+</br>
+
+**DEMO**
+
+https://github.com/user-attachments/assets/327f0008-bc62-49f7-b10f-c43a839def7f
+
+
+
+
 ### Fase 2 — Distancia de Levenshtein
 
 Compara cada dominio con los dominios legítimos de `data/legitimate.txt` y mide
@@ -128,6 +137,14 @@ Hay dos detalles que conviene conocer:
 
 Tipos de coincidencia: `identical` (distancia 0), `fuzzy` (dentro del
 presupuesto) y `near-miss` (dentro de `--watch-distance`).
+
+</br>
+
+**DEMO**
+
+https://github.com/user-attachments/assets/2532bdeb-f6cf-4f9c-a0c6-3875f2f8ab4a
+
+
 
 ### Fase 3 — Comparación con una lista real de phishing
 
@@ -182,6 +199,12 @@ lugar de phishing:
 python3 phishing-filtering.py --domains data/domains.txt --phishing data/year.csv --tag scam
 ```
 
+</br>
+
+**DEMO**
+
+https://github.com/user-attachments/assets/39d5294f-1cf3-47f5-9120-c77e1058181d
+
 
 ## Cómo leer el CSV
 
@@ -193,6 +216,8 @@ cuando el dominio se ha marcado y `N` cuando no.
 | 1 | `analyzed-domain, match, keyword, match-type` |
 | 2 | `analyzed-domain, match, legitimate, distance, match-type` |
 | 3 | `analyzed-domain, match, phishing-domain` |
+
+
 
 ## Ejemplo completo
 

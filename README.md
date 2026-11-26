@@ -82,7 +82,7 @@ son las erratas de un carácter y el ruido; ahí es donde entra la fase 2.
 | `--show-unmatched` | desactivado | añade al final los dominios que no coincidieron con nada |
 | `--csv RUTA` | — | exporta el análisis completo a un CSV |
 
-#### **DEMO** -> [Filtrado por Keywords](/domain-squatter/demo/fase-1-keywords.mov)
+#### **DEMO** -> [Filtrado por Keywords](/demo/fase-1-keywords.mov)
 
 ### Fase 2 — Distancia de Levenshtein
 
